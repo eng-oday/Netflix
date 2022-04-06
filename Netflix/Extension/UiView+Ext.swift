@@ -1,11 +1,13 @@
 //
-//  Uiview + Ext.swift
+//  UiView+Ext.swift
 //  Netflix
 //
-//  Created by Oday Dieg on 21/03/2022.
+//  Created by Oday Dieg on 05/04/2022.
 //
 
+import Foundation
 import UIKit
+
 
 extension UIView {
     

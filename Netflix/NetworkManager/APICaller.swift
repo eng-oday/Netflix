@@ -54,7 +54,7 @@ final class APiCaller{
         guard let url = URL(string: imageURl) else {
             return
         }
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             guard  let data = data , error == nil  else {
                 return
@@ -191,6 +191,45 @@ final class APiCaller{
             }
         }
         task.resume()
+    }
+    //(with: titleName + " trailer")
+    func GetMovieTrailer(with query:String , completion: @escaping (Result<YotubeModel,NetflixError>)->Void){
+        
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
+        guard let url = URL(string: "\(API.YotubeBaseURL)q=\(query)&key=\(API.YotubeKey)") else {
+            return
+
+        }
+        print(url)
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+
+            guard error == nil  else {
+            completion(.failure(.unableToComplete))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(.invalidData))
+                return
+            }
+            guard let response = response as? HTTPURLResponse , response.statusCode == 200 else{
+                completion(.failure(.invalidResponse))
+                return
+            }
+            do{
+                let decoder = JSONDecoder()
+                let yotubeResponse = try decoder.decode(YotubeModel.self, from: data)
+                completion(.success(yotubeResponse))
+            }catch{
+
+                completion(.failure(.invalidData))
+            }
+            
+        }
+        task.resume()
+        
+        
     }
 
         

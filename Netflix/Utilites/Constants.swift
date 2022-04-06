@@ -16,6 +16,14 @@ enum TabBar {
     static let downloads    = "Downloads"
     
 }
+enum Image {
+    static let playBtn      = "play.circle"
+}
+enum NotificationCenterNames{
+    
+    static let ComingSoonArrayOfData = "Netflix.ComingSoon"
+    
+}
 
 enum TabBarImage {
     
@@ -33,9 +41,11 @@ enum navigationBarImage {
 
 enum API {
     
-    static let key          = "e95fbde08b882da788941774c3063a06"
-    static let baseURL      = "https://api.themoviedb.org/3/"
-    static let imageBase    = "https://image.tmdb.org/t/p/w500/"
+    static let key              = "e95fbde08b882da788941774c3063a06"
+    static let baseURL          = "https://api.themoviedb.org/3/"
+    static let imageBase        = "https://image.tmdb.org/t/p/w500/"
+    static let YotubeKey        = "AIzaSyDcK_wr637ya2jF7rF4yIigh8deGZRLWb8"
+    static let YotubeBaseURL    = "https://www.googleapis.com/youtube/v3/search?"
     
 }
 

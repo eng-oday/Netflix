@@ -16,6 +16,7 @@ struct Movies:Codable{
 
 struct Results:Codable{
     let id:Int
+    let title:String?
     let original_language:String
     var original_title:String?
     let overview:String

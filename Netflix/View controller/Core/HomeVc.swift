@@ -9,7 +9,7 @@ import UIKit
 
 class HomeVc: UIViewController {
     
-    
+    //MARK: - Core Var
     
     private var collectionView = UICollectionView(
         frame: .zero,
@@ -23,6 +23,9 @@ class HomeVc: UIViewController {
     var trendingTV          = [Results]()
     var upComing            = [Results]()
     var topRated            = [Results]()
+    
+    
+    //MARK: - Main Func
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,19 +44,9 @@ class HomeVc: UIViewController {
     private func setViewController(){
         view.backgroundColor  = .systemBackground
     }
-    private func configureCollectioView(){
-        view.addSubview(collectionView)
-        collectionView.delegate                 = self
-        collectionView.dataSource               = self
-        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
-        collectionView.register(TopicCollectionCell.self, forCellWithReuseIdentifier: TopicCollectionCell.id)
-        
-        collectionView.register(TittleHeaderCollectionReusableView.self,
-                                
-                                forSupplementaryViewOfKind:                 UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier:                        TittleHeaderCollectionReusableView.identifier
-        )
-    }
+
+    
+    //MARK: - Navigation Controller
     
     private func SetNavigationController(){
         
@@ -87,7 +80,7 @@ class HomeVc: UIViewController {
     }
     
     
-
+//MARK: - Get Data And Append TO Section
     
     private func fetchData(){
         
@@ -130,7 +123,6 @@ class HomeVc: UIViewController {
             case .failure(let error):
                 self.presentNetflixalertOnMainThread(title: "OOPS ☹️", message: error.rawValue, buttonTitle: "OK")
             }
-            
         }
         
         APiCaller.shared.getTrendingTV { [weak self] result in
@@ -174,7 +166,6 @@ class HomeVc: UIViewController {
             case .failure(let error):
                 self.presentNetflixalertOnMainThread(title: "OOPS ☹️", message: error.rawValue, buttonTitle: "OK")
             }
-            
         }
         
         
@@ -202,6 +193,8 @@ class HomeVc: UIViewController {
         self.trendingTV         = trendingTV
         self.upComing           = upcoming
         self.topRated           = topRated
+        
+        NotificationCenter.default.post(name: NSNotification.Name(NotificationCenterNames.ComingSoonArrayOfData), object: upComing)
         
         
     
@@ -239,8 +232,21 @@ class HomeVc: UIViewController {
 
 extension HomeVc: UICollectionViewDelegate , UICollectionViewDataSource {
     
-    enum sectionType {
+    private func configureCollectioView(){
+        view.addSubview(collectionView)
+        collectionView.delegate                 = self
+        collectionView.dataSource               = self
+        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
+        collectionView.register(TopicCollectionCell.self, forCellWithReuseIdentifier: TopicCollectionCell.id)
         
+        collectionView.register(TittleHeaderCollectionReusableView.self,
+                                
+                                forSupplementaryViewOfKind:                 UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier:                        TittleHeaderCollectionReusableView.identifier
+        )
+    }
+    
+    enum sectionType {
         
         case MainPoster( ViewModel:[MoviesViewModel])
         case trendingMovies( ViewModel:[MoviesViewModel])
@@ -414,6 +420,48 @@ extension HomeVc: UICollectionViewDelegate , UICollectionViewDataSource {
             return cell
         }
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let sectionType  = sections[indexPath.section]
+        
+        switch sectionType {
+            
+        case .MainPoster(ViewModel: let ViewModel):
+            
+            let item = ViewModel.randomElement()
+            print(item?.title ?? "")
+            
+        case .trendingMovies:
+            let item = trendingMovies[indexPath.row]
+            let destVC = MovieViewController(movie: item)
+            destVC.title    = item.original_title!
+            navigationController?.pushViewController(destVC, animated: true)
+        case .trendingTV:
+            let item = trendingTV[indexPath.row]
+            let destVC = MovieViewController(movie: item)
+            destVC.title    = item.original_title
+            navigationController?.pushViewController(destVC, animated: true)
+        case .popular:
+            let item = popularMovies[indexPath.row]
+            let destVC = MovieViewController(movie: item)
+            destVC.title    = item.original_title
+            navigationController?.pushViewController(destVC, animated: true)
+        case .upComing:
+            let item = upComing[indexPath.row]
+            let destVC = MovieViewController(movie: item)
+            destVC.title    = item.original_title
+            navigationController?.pushViewController(destVC, animated: true)
+        case .topRated:
+            let item = topRated[indexPath.row]
+            let destVC = MovieViewController(movie: item)
+            destVC.title    = item.original_title
+            navigationController?.pushViewController(destVC, animated: true)
+        }
+    }
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         

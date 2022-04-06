@@ -15,6 +15,5 @@ struct MoviesViewModel {
     let title:String
     let overview:String
     var poster_path:String
-    let vote_average:Float
-    
+    let vote_average:Float    
 }
